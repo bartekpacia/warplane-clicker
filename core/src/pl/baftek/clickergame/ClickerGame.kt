@@ -6,9 +6,9 @@ class ClickerGame : Game() {
 
     val GAME_NAME = "WarplaneClicker"
 
-    val width: Float = 480f
-    val height: Float = 720f
-    var paused: Boolean = false
+    val width = 480f
+    val height = 720f
+    var paused = false
 
 
     override fun create() {

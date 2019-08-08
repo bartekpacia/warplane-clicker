@@ -8,8 +8,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.MathUtils.random
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.InputEvent
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
@@ -17,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.TimeUtils
 import pl.baftek.clickergame.entities.Enemy
+import pl.baftek.clickergame.ui.Styles
 
 class GameplayScreen constructor(game: ClickerGame) : AbstractScreen(game) {
 
@@ -119,7 +118,7 @@ class GameplayScreen constructor(game: ClickerGame) : AbstractScreen(game) {
             }
 
             if (enemy.y < -100) {
-                finishGame()
+                loseGame()
             }
         }
     }
@@ -140,12 +139,12 @@ class GameplayScreen constructor(game: ClickerGame) : AbstractScreen(game) {
         enemiesIterator.remove()
     }
 
-    private fun finishGame() {
+    private fun loseGame() {
         lost = true
 
-        val label = Label("You lost!", redLabelStyle)
+        val label = Label("You lost!", Styles.redLabel)
         label.setFontScale(2.5f)
-        val labelButton = Label("Click here to try again", whiteLabelStyle)
+        val labelButton = Label("Click here to try again", Styles.whiteLabel)
         labelButton.setFontScale(2f)
         labelButton.addListener(object : ClickListener() {
 

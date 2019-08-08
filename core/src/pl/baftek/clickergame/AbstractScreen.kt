@@ -2,37 +2,24 @@ package pl.baftek.clickergame
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.badlogic.gdx.utils.viewport.StretchViewport
 
 
-abstract class AbstractScreen constructor(var game: ClickerGame) : Screen {
+abstract class AbstractScreen constructor(val game: ClickerGame) : Screen {
 
-    protected val camera: OrthographicCamera
-    protected var stage: Stage
-    protected val spriteBatch: SpriteBatch
-
-    private val font: BitmapFont
-    protected val whiteLabelStyle: LabelStyle
-    protected val redLabelStyle: LabelStyle
+    protected val camera: OrthographicCamera = OrthographicCamera()
+    protected val stage: Stage
+    protected val spriteBatch = SpriteBatch()
 
     init {
-        camera = OrthographicCamera()
         camera.setToOrtho(false, game.width, game.height)
         camera.update()
 
         stage = Stage(StretchViewport(game.width, game.height, camera))
-        spriteBatch = SpriteBatch()
-
-        font = BitmapFont()
-        whiteLabelStyle = LabelStyle(font, Color.WHITE)
-        redLabelStyle = LabelStyle(font, Color.RED)
 
         Gdx.input.inputProcessor = stage
     }
@@ -73,7 +60,5 @@ abstract class AbstractScreen constructor(var game: ClickerGame) : Screen {
 
     override fun dispose() {
         game.dispose()
-
     }
-
 }
