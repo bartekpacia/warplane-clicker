@@ -4,7 +4,7 @@ apply plugin: "kotlin"
 sourceCompatibility = 1.6
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-sourceSets.main.java.srcDirs = [ "src/" ]
+sourceSets.main.java.srcDirs = ["src/"]
 
 
 eclipse.project {
@@ -19,7 +19,10 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    compile "io.github.libktx:ktx-actors:$ktxVersion"
+    compile "io.github.libktx:ktx-scene2d:$ktxVersion"
+    compile "io.github.libktx:ktx-log:$ktxVersion"
 }
 compileKotlin {
     kotlinOptions {
