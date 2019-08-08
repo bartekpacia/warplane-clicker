@@ -10,10 +10,10 @@ class Assets {
     companion object {
         val manager: AssetManager = AssetManager()
 
-        val bf109 = AssetDescriptor<Texture>("bf109_pixel.png", Texture::class.java)
-        val play = AssetDescriptor<Texture>("play.png", Texture::class.java)
-        val pause = AssetDescriptor<Texture>("pause.png", Texture::class.java)
-        val explosion = AssetDescriptor<Sound>("explosion_1.mp3", Sound::class.java)
+        val bf109 = AssetDescriptor("bf109_pixel.png", Texture::class.java)
+        val play = AssetDescriptor("play.png", Texture::class.java)
+        val pause = AssetDescriptor("pause.png", Texture::class.java)
+        val explosion = AssetDescriptor("explosion_1.mp3", Sound::class.java)
 
         fun load() {
             manager.load(bf109)

@@ -4,11 +4,12 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.ParticleEffect
-import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.MathUtils.random
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.InputEvent
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
@@ -27,8 +28,8 @@ class GameplayScreen constructor(game: ClickerGame) : AbstractScreen(game) {
 
     //behaviour
     private var touchPos: Vector3
-    private val enemies: Array<Enemy>
-    private val particleEffects: Array<ParticleEffect>
+    private val enemies: Array<Enemy> = Array()
+    private val particleEffects: Array<ParticleEffect> = Array()
     private lateinit var enemiesIterator: MutableIterator<Enemy>
     private val referenceParticleEffect: ParticleEffect
 
@@ -40,8 +41,6 @@ class GameplayScreen constructor(game: ClickerGame) : AbstractScreen(game) {
     private val pauseDrawable: TextureRegionDrawable
 
     init {
-        enemies = Array()
-        particleEffects = Array()
         touchPos = Vector3(0f, 0f, 0f)
         table = Table()
         scoreLabel = Label("Score: " + score, LabelStyle(BitmapFont(), Color.WHITE))
@@ -127,7 +126,7 @@ class GameplayScreen constructor(game: ClickerGame) : AbstractScreen(game) {
 
     private fun destroyEnemy(enemy: Enemy) {
         score++
-        scoreLabel.setText("Score: " + score)
+        scoreLabel.setText("Score: $score")
 
         val explosion = ParticleEffect(referenceParticleEffect)
         explosion.setPosition(enemy.x, enemy.y)
@@ -168,7 +167,6 @@ class GameplayScreen constructor(game: ClickerGame) : AbstractScreen(game) {
     }
 
     private fun spawnEnemy() {
-
         if (TimeUtils.nanoTime() - lastEnemySpawnTime > enemySpawnCooldown) {
             val enemy = Enemy(random(0, 400).toFloat(), game.height + 300)
             enemies.add(enemy)
