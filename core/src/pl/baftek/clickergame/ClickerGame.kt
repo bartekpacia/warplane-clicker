@@ -1,6 +1,9 @@
 package pl.baftek.clickergame
 
 import com.badlogic.gdx.Game
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
+import ktx.scene2d.Scene2DSkin
 
 class ClickerGame : Game() {
 
@@ -12,9 +15,11 @@ class ClickerGame : Game() {
 
 
     override fun create() {
+        Scene2DSkin.defaultSkin = Skin(Gdx.files.internal("skin/uiskin.json"))
         Assets.load()
         Assets.manager.finishLoading()
         setScreen(GameplayScreen(this))
+
     }
 
     override fun dispose() {

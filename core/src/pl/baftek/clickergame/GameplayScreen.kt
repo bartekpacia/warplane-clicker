@@ -1,48 +1,49 @@
 package pl.baftek.clickergame
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.ParticleEffect
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.MathUtils.random
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.InputEvent
-import com.badlogic.gdx.scenes.scene2d.ui.*
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
+import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.ui.Table
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.TimeUtils
+import ktx.scene2d.horizontalGroup
+import ktx.scene2d.label
+import ktx.scene2d.table
 import pl.baftek.clickergame.entities.Enemy
 import pl.baftek.clickergame.ui.Styles
 
 class GameplayScreen constructor(game: ClickerGame) : AbstractScreen(game) {
 
-    //environment
+    // Environment
     private var score: Int = 0
     private var lost: Boolean = false
     private var lastEnemySpawnTime: Long = 0
     private val enemySpawnCooldown: Long = 250_000_000
 
-    //behaviour
+    // Behaviour
     private var touchPos: Vector3
     private val enemies: Array<Enemy> = Array()
     private val particleEffects: Array<ParticleEffect> = Array()
     private lateinit var enemiesIterator: MutableIterator<Enemy>
     private val referenceParticleEffect: ParticleEffect
 
-    //ui
-    private val table: Table
-    private val scoreLabel: Label
+    // UI
+    private lateinit var uiTable: Table
+    private lateinit var scoreLabel: Label
     private val pauseButton: Image
     private val playDrawable: TextureRegionDrawable
     private val pauseDrawable: TextureRegionDrawable
 
     init {
         touchPos = Vector3(0f, 0f, 0f)
-        table = Table()
-        scoreLabel = Label("Score: " + score, LabelStyle(BitmapFont(), Color.WHITE))
         playDrawable = TextureRegionDrawable(TextureRegion(Assets.manager.get(Assets.play)))
         pauseDrawable = TextureRegionDrawable(TextureRegion(Assets.manager.get(Assets.pause)))
 
@@ -67,16 +68,19 @@ class GameplayScreen constructor(game: ClickerGame) : AbstractScreen(game) {
     }
 
     override fun buildUI() {
-        scoreLabel.setFontScale(2f)
 
-        val topHorizontalGroup = HorizontalGroup().space(200f).padTop(20f)
-        topHorizontalGroup.addActor(scoreLabel)
-        topHorizontalGroup.addActor(pauseButton)
-        table.add(topHorizontalGroup).row()
-        table.top()
-        table.setFillParent(true)
+        uiTable = table {
+            horizontalGroup {
+                scoreLabel = label("Score: $score") {
+                    style = Styles.whiteLabel
+                }
+            }
+        }
 
-        stage.addActor(table)
+        uiTable.top()
+        uiTable.setFillParent(true)
+
+        stage.addActor(uiTable)
     }
 
     override fun render(delta: Float) {
@@ -160,7 +164,7 @@ class GameplayScreen constructor(game: ClickerGame) : AbstractScreen(game) {
         group.center()
         group.space(100f)
 
-        table.add(group).row()
+        uiTable.add(group).row()
 
         pauseButton.clearListeners()
     }
