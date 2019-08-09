@@ -6,17 +6,19 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.MathUtils.random
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.InputEvent
-import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.TimeUtils
+import ktx.actors.onClick
 import ktx.scene2d.horizontalGroup
 import ktx.scene2d.label
 import ktx.scene2d.table
+import ktx.scene2d.textButton
 import pl.baftek.clickergame.entities.Enemy
 import pl.baftek.clickergame.ui.Styles
 
@@ -38,7 +40,7 @@ class GameplayScreen constructor(game: ClickerGame) : AbstractScreen(game) {
     // UI
     private lateinit var uiTable: Table
     private lateinit var scoreLabel: Label
-    private val pauseButton: Image
+    private lateinit var pauseButton: TextButton
     private val playDrawable: TextureRegionDrawable
     private val pauseDrawable: TextureRegionDrawable
 
@@ -50,35 +52,32 @@ class GameplayScreen constructor(game: ClickerGame) : AbstractScreen(game) {
         referenceParticleEffect = ParticleEffect()
         referenceParticleEffect.load(Gdx.files.internal("explosion.p"), Gdx.files.internal(""))
 
-        pauseButton = Image(pauseDrawable)
-        pauseButton.addListener(object : ClickListener() {
-            override fun clicked(event: InputEvent?, x: Float, y: Float) {
-                if (game.paused) {
-                    game.paused = false
-                    pauseButton.drawable = pauseDrawable
-                } else {
-                    game.paused = true
-                    pauseButton.drawable = playDrawable
-                }
-                super.clicked(event, x, y)
-            }
-        })
-
         buildUI()
     }
 
     override fun buildUI() {
 
         uiTable = table {
+            setFillParent(true)
+            top()
+            
             horizontalGroup {
                 scoreLabel = label("Score: $score") {
-                    style = Styles.whiteLabel
+                    setFontScale(2f)
+                }
+                pauseButton = textButton("Pause") {
+                    onClick {
+                        if (game.paused) {
+                            game.paused = false
+                            pauseButton.setText("Pause")
+                        } else {
+                            game.paused = true
+                            pauseButton.setText("Resume")
+                        }
+                    }
                 }
             }
         }
-
-        uiTable.top()
-        uiTable.setFillParent(true)
 
         stage.addActor(uiTable)
     }
