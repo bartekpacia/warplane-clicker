@@ -1,26 +1,23 @@
 package pl.baftek.clickergame
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.ParticleEffect
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.MathUtils.random
 import com.badlogic.gdx.math.Vector3
-import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
-import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
+import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.TimeUtils
 import ktx.actors.onClick
-import ktx.scene2d.horizontalGroup
 import ktx.scene2d.label
 import ktx.scene2d.table
 import ktx.scene2d.textButton
 import pl.baftek.clickergame.entities.Enemy
-import pl.baftek.clickergame.ui.Styles
 
 class GameplayScreen constructor(game: ClickerGame) : AbstractScreen(game) {
 
@@ -39,6 +36,7 @@ class GameplayScreen constructor(game: ClickerGame) : AbstractScreen(game) {
 
     // UI
     private lateinit var uiTable: Table
+    private lateinit var gameOverLayout: Table
     private lateinit var scoreLabel: Label
     private lateinit var pauseButton: TextButton
     private val playDrawable: TextureRegionDrawable
@@ -60,11 +58,13 @@ class GameplayScreen constructor(game: ClickerGame) : AbstractScreen(game) {
         uiTable = table {
             setFillParent(true)
             top()
-            
-            horizontalGroup {
+            setDebug(true, true)
+
+            table {
                 scoreLabel = label("Score: $score") {
-                    setFontScale(2f)
-                }
+                    setFontScale(1.5f)
+                }.cell(align = Align.left, pad = 8f, padRight = 16f)
+
                 pauseButton = textButton("Pause") {
                     onClick {
                         if (game.paused) {
@@ -75,8 +75,25 @@ class GameplayScreen constructor(game: ClickerGame) : AbstractScreen(game) {
                             pauseButton.setText("Resume")
                         }
                     }
+                }.cell(align = Align.right)
+
+            }.cell(row = true, align = Align.left)
+
+            gameOverLayout = table {
+                isVisible = false
+
+                label("You lost!") {
+                    setFontScale(3f)
+                    color = Color.RED
+                }.cell(row = true)
+
+                textButton("Try again") {
+                    onClick {
+                        color = Color.RED
+                        game.screen = GameplayScreen(game)
+                    }
                 }
-            }
+            }.cell(row = true, expand = true)
         }
 
         stage.addActor(uiTable)
@@ -145,25 +162,7 @@ class GameplayScreen constructor(game: ClickerGame) : AbstractScreen(game) {
     private fun loseGame() {
         lost = true
 
-        val label = Label("You lost!", Styles.redLabel)
-        label.setFontScale(2.5f)
-        val labelButton = Label("Click here to try again", Styles.whiteLabel)
-        labelButton.setFontScale(2f)
-        labelButton.addListener(object : ClickListener() {
-
-            override fun clicked(event: InputEvent?, x: Float, y: Float) {
-                super.clicked(event, x, y)
-                game.screen = GameplayScreen(game)
-            }
-        })
-
-        val group = VerticalGroup()
-        group.addActor(label)
-        group.addActor(labelButton)
-        group.center()
-        group.space(100f)
-
-        uiTable.add(group).row()
+        gameOverLayout.isVisible = true
 
         pauseButton.clearListeners()
     }

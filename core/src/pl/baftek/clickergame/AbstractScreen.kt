@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.utils.viewport.StretchViewport
+import com.badlogic.gdx.utils.viewport.ExtendViewport
 
 
 abstract class AbstractScreen constructor(val game: ClickerGame) : Screen {
@@ -19,7 +19,7 @@ abstract class AbstractScreen constructor(val game: ClickerGame) : Screen {
         camera.setToOrtho(false, game.width, game.height)
         camera.update()
 
-        stage = Stage(StretchViewport(game.width, game.height, camera))
+        stage = Stage(ExtendViewport(game.width, game.height, camera))
 
         Gdx.input.inputProcessor = stage
     }
